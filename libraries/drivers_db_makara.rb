@@ -2,7 +2,7 @@
 
 module Drivers
   module Db
-    class PostgresqlMakara < Base
+    class Makara < Base
       adapter :postgresql_makara
       allowed_engines :postgres, :postgresql, :postgresql_makara
       packages debian: 'libpq-dev', rhel: 'postgresql96-devel'
