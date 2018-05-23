@@ -4,9 +4,14 @@ module Drivers
   module Db
     class Factory
       def self.build(context, app, options = {})
-        engine = detect_engine(app, context.node, options)
-        raise StandardError, 'There is no supported Db driver for given configuration.' if engine.blank?
-        engine.new(context, app, options)
+        if app['global'].try(:[], 'replication_adapter') == 'makara'
+          Driver::Db::Makara.new(context, app, options)
+        else
+          engine = detect_engine(app, context.node, options)
+          raise StandardError, 'There is no supported Db driver for given configuration.' if engine.blank?
+
+          engine.new(context, app, options)
+        end        
       end
 
       def self.detect_engine(app, node, options)
