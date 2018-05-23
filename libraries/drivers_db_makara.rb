@@ -11,7 +11,7 @@ module Drivers
         output = super
         output[:adapter] = 'postgresql_makara'
         handle_output(output)
-      end      
+      end     
     end
   end
 end

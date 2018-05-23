@@ -4,14 +4,9 @@ module Drivers
   module Db
     class Factory
       def self.build(context, app, options = {})
-        if app['global'].try(:[], 'replication_adapter') == 'makara'
-          Driver::Db::Makara.new(context, app, options)
-        else
-          engine = detect_engine(app, context.node, options)
-          raise StandardError, 'There is no supported Db driver for given configuration.' if engine.blank?
-
-          engine.new(context, app, options)
-        end        
+        engine = detect_engine(app, context.node, options)
+        raise StandardError, 'There is no supported Db driver for given configuration.' if engine.blank?
+        engine.new(context, app, options)
       end
 
       def self.detect_engine(app, node, options)
@@ -20,7 +15,7 @@ module Drivers
             options.try(:[], :rds).try(:[], 'engine') ||
             node.try(:[], 'deploy').try(:[], app['shortname']).try(:[], db_driver.driver_type).try(:[], 'adapter') ||
             node.try(:[], 'defaults').try(:[], db_driver.driver_type).try(:[], 'adapter') ||
-            'sqlite'
+            'postgresql_makara'
           )
         end
       end
